@@ -1,0 +1,94 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'morhetz/gruvbox'
+
+version 6.0
+if &cp | set nocp | endif
+map Q @q
+let s:cpo_save=&cpo
+set cpo&vim
+iabbr Yheader <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=ISO-8859-1">
+<title></title>
+</head>
+<body>
+iabbr Yfooter </body>
+</html>
+let &cpo=s:cpo_save
+unlet s:cpo_save
+set autoindent
+set backspace=indent,eol,start
+set fileencodings=ucs-bom,utf-8,latin1
+set formatoptions=tcql
+set helplang=en
+set history=50
+set hlsearch
+set mouse=a
+set ruler
+set termencoding=utf-8
+set viminfo='20,\"50
+set window=19
+
+set smartindent
+inoremap # X<BS>#
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+syntax enable
+
+au BufNewFile,BufRead *.pp setf ruby
+
+autocmd BufNewFile,BufRead *.inc set filetype=sh
+
+autocmd BufNewFile,BufRead *.recipe set filetype=xml
+
+iabbr Ybp :0
+:0r~/.vim/default_header.txt
+
+iabbr Ybpp :0
+:0r~/.vim/default_header_puppet.txt
+
+
+
+if has('win32')
+    set guifont=Consolas:h13   " Win32.
+elseif has('gui_macvim')
+    set guifont=PT\ Mono:h13
+else
+    set guifont=Monospace\ 12  " Linux.
+endif
+
+autocmd FileType crontab setlocal nowritebackup
+
+let g:sh_noisk = 1
+
+function! s:DimInactiveWindows()
+  for i in range(1, tabpagewinnr(tabpagenr(), '$'))
+    let l:range = ""
+    if i != winnr()
+      if &wrap
+        let l:width=256 " max
+      else
+        let l:width=winwidth(i)
+      endif
+      let l:range = join(range(1, l:width), ',')
+    endif
+    call setwinvar(i, '&colorcolumn', l:range)
+  endfor
+endfunction
+augroup DimInactiveWindows
+  au!
+  au WinEnter * call s:DimInactiveWindows()
+  au WinEnter * set cursorline
+  au WinLeave * set nocursorline
+augroup END
+
+set tabpagemax=50
+
